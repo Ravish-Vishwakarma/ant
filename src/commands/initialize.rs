@@ -5,12 +5,12 @@ pub fn initilize_ant(args: &Vec<String>) {
     let path = env::current_dir();
 
     match path {
-        Ok(path) => create_folders(&path),
+        Ok(path) => create_files_and_folders(&path),
         Err(e) => println!("{}", e),
     }
 }
 
-fn create_folders(current_path: &PathBuf) {
+fn create_files_and_folders(current_path: &PathBuf) {
     println!("Initializing ant in: {}", current_path.display());
 
     let folders = [
