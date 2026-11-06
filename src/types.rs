@@ -8,3 +8,8 @@ pub enum CommandType {
     Branch,
     Checkout,
 }
+
+pub struct RepoFileType {
+    pub path: String,
+    pub content: String,
+}

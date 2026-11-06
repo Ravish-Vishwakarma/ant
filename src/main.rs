@@ -2,9 +2,10 @@ use std::env;
 mod commands;
 mod help;
 mod parse_args;
+mod services;
 mod types;
+use commands::{add, initialize, log};
 
-use commands::{initialize, log};
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() == 1 {
@@ -21,11 +22,13 @@ fn handel_commands(args: &Vec<String>) {
             types::CommandType::Init => {
                 initialize::initilize_ant(args);
             }
-            types::CommandType::Add => {}
+            types::CommandType::Add => {
+                add::ant_add(&args);
+            }
             types::CommandType::Commit => {}
             types::CommandType::Status => {}
             types::CommandType::Log => {
-                log::log(args);
+                log::log(&args);
             }
             types::CommandType::Diff => {}
             types::CommandType::Branch => {}

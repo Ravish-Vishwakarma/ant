@@ -1,12 +1,18 @@
+use crate::services;
+use crate::types::RepoFileType;
 use std::{env, fs, path::PathBuf};
 
 pub fn initilize_ant(args: &Vec<String>) {
-    println!("Init with {:?}", args);
-    let path = env::current_dir();
+    if services::check_ant_exists() {
+        println!("Ant is already initialized");
+    } else {
+        println!("Init with {:?}", args);
+        let path = env::current_dir();
 
-    match path {
-        Ok(path) => create_files_and_folders(&path),
-        Err(e) => println!("{}", e),
+        match path {
+            Ok(path) => create_files_and_folders(&path),
+            Err(e) => println!("{}", e),
+        }
     }
 }
 
@@ -15,21 +21,29 @@ fn create_files_and_folders(current_path: &PathBuf) {
 
     let folders = [
         ".ant",
-        ".ant/hooks/",
-        ".ant/info/",
-        ".ant/logs/",
-        ".ant/objects/pack/",
+        ".ant/objects/",
         ".ant/refs/heads/",
-        ".ant/refs/tags/",
+        // ".ant/refs/tags/",
+        // ".ant/hooks/",
+        // ".ant/info/",
+        // ".ant/logs/",
     ];
     let files = [
-        ".ant/index",
-        ".ant/COMMIT_EDITMSG",
-        ".ant/description",
-        ".ant/HEAD",
-        ".ant/config",
-        ".ant/info/exclude",
-        ".ant/logs/HEAD",
+        RepoFileType {
+            path: String::from(".ant/index"),
+            content: String::from("{}"),
+        },
+        RepoFileType {
+            path: String::from(".ant/HEAD"),
+            content: String::from("ref: refs/heads/master"),
+        },
+        // ".ant/index",
+        // ".ant/HEAD",
+        // ".ant/COMMIT_EDITMSG",
+        // ".ant/description",
+        // ".ant/config",
+        // ".ant/info/exclude",
+        // ".ant/logs/HEAD",
     ];
     for folder in folders {
         let create_dir = fs::create_dir_all(current_path.join(folder));
@@ -39,7 +53,7 @@ fn create_files_and_folders(current_path: &PathBuf) {
         }
     }
     for file in files {
-        let create_file = fs::write(format!("{}", file), "");
+        let create_file = fs::write(format!("{}", file.path), file.content);
         match create_file {
             Ok(_) => {}
             Err(e) => println!("{e}"),
