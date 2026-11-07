@@ -28,6 +28,10 @@ pub fn ant_add(args: &Vec<String>) {
 
 fn add_file(path: &String) {
     println!("{} is a file", path);
+    if services::check_path_exists(&path) {
+    } else {
+        println!("{}, File doesn't exists", path);
+    }
 }
 
 fn add_dir(path: &String) {
