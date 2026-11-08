@@ -1,3 +1,8 @@
+use flate2::Compression;
+use flate2::write::ZlibEncoder;
+use sha1::{Digest, Sha1};
+use std::io::Write;
+
 pub enum CommandType {
     Init,
     Add,
@@ -15,12 +20,40 @@ pub struct RepoFileType {
 }
 
 // ---------------------------- GITOBJ ---------------------------- //
-struct GitObject {
-    obj_type: GitObjType,
-    // content: &[u8],
+pub struct GitObject {
+    object_type: GitObjType,
+    content: Vec<u8>,
 }
-enum GitObjType {
+
+#[derive(Debug)]
+pub enum GitObjType {
     Blob,
     Commit,
     Tree,
+}
+
+impl GitObject {
+    pub fn hash(&self) -> String {
+        let mut hasher = Sha1::new();
+
+        let header = format!("{:?} {}\0", self.object_type, self.content.len());
+
+        hasher.update(header.as_bytes());
+        hasher.update(&self.content);
+        let result = hasher.finalize();
+
+        hex::encode(result)
+    }
+
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let header = format!("{:?} {}\0", self.object_type, self.content.len());
+        let mut encoder = ZlibEncoder::new(Vec::new(), Compression::default());
+
+        encoder.write_all(header.as_bytes())?;
+        encoder.write_all(&self.content)?;
+
+        let compressed_bytes = encoder.finish()?;
+
+        Ok(compressed_bytes)
+    }
 }
