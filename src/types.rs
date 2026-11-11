@@ -23,8 +23,8 @@ pub struct RepoFileType {
 
 // ---------------------------- GITOBJ ---------------------------- //
 pub struct GitObject {
-    object_type: GitObjType,
-    content: Vec<u8>,
+    pub object_type: GitObjType,
+    pub content: Vec<u8>,
 }
 
 #[derive(Debug)]
@@ -94,7 +94,7 @@ impl GitObject {
 }
 
 pub struct Blob {
-    content: Vec<u8>,
+    pub content: Vec<u8>,
 }
 impl Blob {
     pub fn get_content(&self) -> &Vec<u8> {
