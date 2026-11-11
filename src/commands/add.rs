@@ -34,7 +34,8 @@ fn add_file(path: &String) {
     if services::check_path_exists(&path) {
         let path = Path::new(&path);
         let bytes: Vec<u8> = fs::read(path).unwrap();
-        let blob = Blob { content: bytes };
+        let blob = Blob::new(bytes);
+        let blob_hash = store_object(blob);
     } else {
         println!("{}, File doesn't exists", path);
     }
@@ -44,7 +45,7 @@ fn add_dir(path: &String) {
     println!("{} is a folder", path);
 }
 
-fn store_object(obj: GitObject) -> String {
+fn store_object(obj: Blob) -> String {
     let obj_hash = obj.hash();
     let obj_dir = Path::new(".ant/objects/");
     let obj_dir = obj_dir.join(format!("{}", &obj_hash[0..2]));

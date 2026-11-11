@@ -94,10 +94,28 @@ impl GitObject {
 }
 
 pub struct Blob {
-    pub content: Vec<u8>,
+    pub object: GitObject,
+    // pub content: Vec<u8>,
 }
 impl Blob {
-    pub fn get_content(&self) -> &Vec<u8> {
-        return &self.content;
+    pub fn new(content: Vec<u8>) -> Self {
+        Self {
+            object: GitObject {
+                object_type: GitObjType::Blob,
+                content,
+            },
+        }
+    }
+
+    pub fn get_content(&self) -> &[u8] {
+        &self.object.content
+    }
+
+    pub fn hash(&self) -> String {
+        self.object.hash()
+    }
+
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        self.object.serialize()
     }
 }
