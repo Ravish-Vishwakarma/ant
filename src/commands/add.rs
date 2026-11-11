@@ -40,6 +40,8 @@ fn add_file(file_path: &String) {
         let blob_hash = store_object(blob);
         let mut index = load_index().unwrap();
         index[file_path] = serde_json::json!(blob_hash);
+        let saved_index = save_index(&index);
+        println!("Added {:?}", path);
     } else {
         println!("{}, File doesn't exists", file_path);
     }
@@ -49,7 +51,7 @@ fn add_dir(path: &String) {
     println!("{} is a folder", path);
 }
 
-fn save_index(index_content: serde_json::Value) -> Result<(), Box<dyn std::error::Error>> {
+fn save_index(index_content: &serde_json::Value) -> Result<(), Box<dyn std::error::Error>> {
     let index_path = ".ant/index";
     let content = serde_json::to_string_pretty(&index_content)?;
     fs::write(index_path, content)?;
