@@ -1,9 +1,5 @@
-use crate::{
-    services,
-    types::{Blob, GitObject},
-};
+use crate::{services, types::Blob};
 use serde_json;
-use std::collections::HashMap;
 use std::{fs, path::Path};
 
 pub fn ant_add(args: &Vec<String>) {
@@ -41,14 +37,25 @@ fn add_file(file_path: &String) {
         let mut index = load_index().unwrap();
         index[file_path] = serde_json::json!(blob_hash);
         let saved_index = save_index(&index);
-        println!("Added {:?}", path);
+        match saved_index {
+            Ok(_) => println!("Added {:?}", path),
+            Err(e) => println!("Error Saving Index File: {}", e),
+        }
     } else {
         println!("{}, File doesn't exists", file_path);
     }
 }
 
-fn add_dir(path: &String) {
-    println!("{} is a folder", path);
+fn add_dir(dir_path: &String) {
+    println!("{} is a folder", dir_path);
+    if services::check_path_exists(&dir_path) {
+        let all_files = services::get_all_files(Path::new(&dir_path));
+        for file_path in all_files {
+            add_file(&file_path.display().to_string());
+        }
+    } else {
+        println!("{}, Directory doesn't exists", dir_path);
+    }
 }
 
 fn save_index(index_content: &serde_json::Value) -> Result<(), Box<dyn std::error::Error>> {
