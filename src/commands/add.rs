@@ -50,9 +50,10 @@ fn add_dir(dir_path: &String) {
     println!("{} is a folder", dir_path);
     if services::check_path_exists(&dir_path) {
         let all_files = services::get_all_files(Path::new(&dir_path));
-        for file_path in all_files {
+        for file_path in &all_files {
             add_file(&file_path.display().to_string());
         }
+        println!("Added {} files from path {}", all_files.len(), dir_path);
     } else {
         println!("{}, Directory doesn't exists", dir_path);
     }
