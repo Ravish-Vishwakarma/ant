@@ -28,7 +28,7 @@ pub fn ant_add(args: &Vec<String>) {
 }
 
 fn add_file(file_path: &String) {
-    println!("{} is a file", file_path);
+    // println!("{} is a file", file_path);
     if services::check_path_exists(&file_path) {
         let path = Path::new(&file_path);
         let bytes: Vec<u8> = fs::read(path).unwrap();
@@ -38,7 +38,7 @@ fn add_file(file_path: &String) {
         index[file_path] = serde_json::json!(blob_hash);
         let saved_index = save_index(&index);
         match saved_index {
-            Ok(_) => println!("Added {:?}", path),
+            Ok(_) => println!("Added {}", path.display()),
             Err(e) => println!("Error Saving Index File: {}", e),
         }
     } else {
@@ -47,7 +47,7 @@ fn add_file(file_path: &String) {
 }
 
 fn add_dir(dir_path: &String) {
-    println!("{} is a folder", dir_path);
+    // println!("{} is a folder", dir_path);
     if services::check_path_exists(&dir_path) {
         let all_files = services::get_all_files(Path::new(&dir_path));
         for file_path in &all_files {
