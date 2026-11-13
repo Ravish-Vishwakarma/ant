@@ -119,3 +119,8 @@ impl Blob {
         self.object.serialize()
     }
 }
+
+pub struct CommitInfo {
+    pub message: String,
+    pub author: String,
+}
