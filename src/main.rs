@@ -4,7 +4,7 @@ mod help;
 mod parse_args;
 mod services;
 mod types;
-use commands::{add, initialize, log};
+use commands::{add, commit, initialize, log};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -25,7 +25,9 @@ fn handel_commands(args: &Vec<String>) {
             types::CommandType::Add => {
                 add::ant_add(&args);
             }
-            types::CommandType::Commit => {}
+            types::CommandType::Commit => {
+                commit::ant_commit(&args);
+            }
             types::CommandType::Status => {}
             types::CommandType::Log => {
                 log::log(&args);
